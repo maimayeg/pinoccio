@@ -1,3 +1,5 @@
+
+
 body {
   font-family: Arial, sans-serif;
   background-color: #f4f4f4;
@@ -7,29 +9,31 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
+  overflow: hidden; /* Prevent scrollbars */
 }
 
 .App {
-  max-width: 800px;
-  width: 100%;
-  margin: 20px;
-  background-color: white;
-  padding: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 95vw;
+  height: 100vh;
+  margin: 0;
+  background-color: #1f2833; /* Darker background for contrast */
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .App-header {
-  background-color: #333;
-  color: white;
-  padding: 10px 0;
+  color: #fff; /* White text for better contrast */
   text-align: center;
+  margin-bottom: 20px;
 }
 
 .input-section textarea {
-  width: 100%;
-  height: 100px;
+  width: 96%;
+  height: 300px;
   padding: 10px;
   margin-bottom: 10px;
+  
 }
 
 .intensity-controls {
@@ -49,21 +53,32 @@ body {
 .output-section {
   border-top: 1px solid #ddd;
   padding-top: 20px;
+  color: #fff; /* White text for better contrast */
 }
 
 .output-section p {
   white-space: pre-wrap;
+  color: #fff; /* White text for better contrast */
 }
 
 .generate-button {
-  display: block;
-  width: 100%;
-  padding: 10px;
   background-color: #007BFF;
   color: white;
   border: none;
   cursor: pointer;
   font-size: 16px;
+  padding: 15px 30px;
+  border-radius: 5px;
+}
+.deconstruct-button {
+  margin-left: 10px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 15px 30px;
+  border-radius: 5px;
 }
 
 .generate-button:hover {
