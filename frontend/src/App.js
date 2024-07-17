@@ -32,7 +32,7 @@ function App() {
     const response = await axios.post('http://127.0.0.1:5000/deconstruct', {
       generated_text: article,
     });
-    setDeconstructionReport(response.data);
+    setDeconstructionReport(response.data.deconstruction_report);
   }
 
   useEffect(() => {
@@ -62,7 +62,12 @@ function App() {
         <div className="output-section">
           <h2>Generated Article</h2>
           <p>{article}</p>
-          
+          {deconstructionReport && (
+            <div className="deconstruction-report">
+              <h2>Deconstruction Report</h2>
+              <p>{deconstructionReport}</p>
+            </div>
+          )}
         </div>
         
       </main>
