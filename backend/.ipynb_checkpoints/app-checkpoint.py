@@ -67,7 +67,7 @@ def deconstruct():
     generated_text = data['generated_text']  # Access generated text from request
 
     # Analyze the generated text
-    deconstruction_report = propaganda_generator.deconstruct(generated_text)
+    deconstruction_report = propaganda_generator.deconstruct()
 
     return jsonify({'deconstruction_report': deconstruction_report}), 200
     
