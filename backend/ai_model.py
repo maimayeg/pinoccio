@@ -1,7 +1,12 @@
                                                       
 from langchain.llms import Ollama
-llm = Ollama(model="llama3:8b")
+
 from prompts import get_prompt
+import openai 
+import os
+from key import OPENAI_API_KEY
+
+os.environ['OPENAI_API_KEY'] = OPENAI_API_KEY
 
 class PropagandaGenerator:
 
@@ -9,7 +14,7 @@ class PropagandaGenerator:
         self.generated_output = None  # To store the output after generating
         self.use_openai = use_openai  # By default, use OpenAI
         self.llama = Ollama(model="llama3:8b")  # Initialize the LLaMA model, if needed
-        
+        self.client = openai.OpenAI()
     
     def _generate_all(self, headline, intensity):
         """
@@ -29,7 +34,7 @@ class PropagandaGenerator:
         # Call the model to generate the output (using the prompt)
         self.generated_output = self._generate_news_article(prompt)
         
-  def _generate_news_article(self, prompt, max_tokens=500):
+  def _generate_news_article(self, prompt, max_tokens=1000):
         """
         Generates a news article using the selected model (OpenAI's GPT or LLaMA).
         
@@ -42,14 +47,12 @@ class PropagandaGenerator:
         """
         if self.use_openai:
             # Generate output using OpenAI's GPT model
-            response = openai.ChatCompletion.create(
-                model="gpt-4",
-                messages=[
-                    {"role": "system", "content": "You are a helpful assistant."},
-                    {"role": "user", "content": prompt}
-                ],
-                max_tokens=max_tokens
-            )
+            response =  self.client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": prompt}],
+            max_tokens= max_tokens)
             return response.choices[0].message.content
         else:
             # Generate output using LLaMA
