@@ -5,14 +5,16 @@ from prompts import get_prompt
 
 class PropagandaGenerator:
 
-    def __init__(self):
-        #self.model_name = "llama3"
+    def __init__(self, use_openai=True):
         self.generated_output = None  # To store the output after generating
+        self.use_openai = use_openai  # By default, use OpenAI
+        self.llama = Ollama(model="llama3:8b")  # Initialize the LLaMA model, if needed
+        
     
     def _generate_all(self, headline, intensity):
         """
         This private function generates the full article including both the propaganda 
-        and the disclaimer using a single model call.
+        and the disclaimer using the selected model (OpenAI or LLaMA).
         
         Args:
           headline: The headline to base the article on.
@@ -21,12 +23,38 @@ class PropagandaGenerator:
         Returns:
           The complete generated article (propaganda + disclaimer).
         """    
-        
         # Get the appropriate prompt based on the headline and intensity
         prompt = get_prompt(headline, intensity)
-        
+
         # Call the model to generate the output (using the prompt)
-        self.generated_output = llm.predict(prompt)
+        self.generated_output = self._generate_news_article(prompt)
+        
+  def _generate_news_article(self, prompt, max_tokens=500):
+        """
+        Generates a news article using the selected model (OpenAI's GPT or LLaMA).
+        
+        Args:
+          prompt (str): The prompt to be used for generation.
+          max_tokens (int): Maximum tokens to generate for OpenAI's model.
+        
+        Returns:
+          str: Generated article.
+        """
+        if self.use_openai:
+            # Generate output using OpenAI's GPT model
+            response = openai.ChatCompletion.create(
+                model="gpt-4",
+                messages=[
+                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "user", "content": prompt}
+                ],
+                max_tokens=max_tokens
+            )
+            return response.choices[0].message.content
+        else:
+            # Generate output using LLaMA
+            return self.llama.predict(prompt)
+  	
 	
    def is_valid_input(self, headline):
 	"""
@@ -101,6 +129,4 @@ class PropagandaGenerator:
         This function resets the stored generated output, allowing for a new article to be generated.
         """
         self.generated_output = None
-    def model_choice():
-        #####to be worked on
-        return None
+ 
