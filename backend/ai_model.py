@@ -5,10 +5,13 @@ from prompts import get_prompt
 import openai 
 import os
 from key import OPENAI_API_KEY
+import re
 
 os.environ['OPENAI_API_KEY'] = OPENAI_API_KEY
 
 class PropagandaGenerator:
+
+
 
     def __init__(self, use_openai=True):
         self.generated_output = None  # To store the output after generating
@@ -33,50 +36,53 @@ class PropagandaGenerator:
 
         # Call the model to generate the output (using the prompt)
         self.generated_output = self._generate_news_article(prompt)
+   	
+   
         
-  def _generate_news_article(self, prompt, max_tokens=1000):
+    def _generate_news_article(self, prompt, max_tokens=1000):
+    
+    	"""
+    	Generates a news article using the selected model (OpenAI's GPT or LLaMA).
+    
+    	Args:
+    	  prompt (str): The prompt to be used for generation.
+    	  max_tokens (int): Maximum tokens to generate for OpenAI's model.
+    
+    	Returns:
+    	  str: Generated article.
+    	"""
+    	if self.use_openai:
+    	    # Generate output using OpenAI's GPT model
+    	    response =  self.client.chat.completions.create(
+    	    model="gpt-4o-mini",
+    	    messages=[
+    	    {"role": "system", "content": "You are a helpful assistant."},
+    	    {"role": "user", "content": prompt}],
+    	    max_tokens= max_tokens)
+    	    return response.choices[0].message.content
+    	else:
+    	    # Generate output using LLaMA
+    	    return self.llama.predict(prompt)
+  	
+    
+    def is_valid_input(self, headline):
         """
-        Generates a news article using the selected model (OpenAI's GPT or LLaMA).
+        Validates if the input headline is news-related.
         
         Args:
-          prompt (str): The prompt to be used for generation.
-          max_tokens (int): Maximum tokens to generate for OpenAI's model.
+            headline (str): The headline to validate.
         
         Returns:
-          str: Generated article.
+            bool: True if the headline is valid, False otherwise.
         """
-        if self.use_openai:
-            # Generate output using OpenAI's GPT model
-            response =  self.client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-            {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": prompt}],
-            max_tokens= max_tokens)
-            return response.choices[0].message.content
-        else:
-            # Generate output using LLaMA
-            return self.llama.predict(prompt)
-  	
-	
-   def is_valid_input(self, headline):
-	"""
-	Validates if the input headline is news-related.
-	
-	Args:
-	    headline (str): The headline to validate.
-
-	Returns:
-	    bool: True if the headline is valid, False otherwise.
-	"""
-	# Check if the headline is empty or too short
-	if not headline or len(headline) < 10:
-	    return False
-
-	# Check for gibberish using regex (optional)
-	if re.search(r'\b[a-zA-Z]{1,3}\b', headline):  # Filters out short, meaningless words
-	    return False
-	return True
+        # Check if the headline is empty or too short
+        if not headline or len(headline) < 10:
+            return False
+        
+        # Check for gibberish using regex (optional)
+        if re.search(r'\b[a-zA-Z]{1,3}\b', headline):  # Filters out short, meaningless words
+            return False
+        return True
     
     def generate_propaganda(self, headline, intensity='neutral'):
         """
@@ -91,8 +97,8 @@ class PropagandaGenerator:
           The propaganda portion (without the disclaimer).
         """
         # Validate the input
-        if not self.is_valid_headline(headline):
-            raise ValueError("Invalid headline: Please provide a news-related headline or an article.")
+        # if not self.is_valid_headline(headline):
+        #     raise ValueError("Invalid headline: Please provide a news-related headline or an article.")
             
         # If the output hasn't been generated yet, generate it
         if self.generated_output is None:
