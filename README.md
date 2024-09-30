@@ -22,7 +22,7 @@ Pinocchio is a web application that generates propaganda articles based on provi
 
 Below is a screenshot of the Pinocchio Fake News Generator in action:
 
-![Pinocchio Demo](pinoccio.png)
+![Pinocchio Demo](pinnocio.png)
 
 ## Features
 - Generate fake news articles with selectable intensity levels.
@@ -52,7 +52,7 @@ Follow these steps to set up the project on your local machine.
 1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/maimayeg/pinocchio.git
+   git clone https://github.com/maimayeg/pinoccio.git
    cd pinocchio
    ```
 2. Navigate to the backend folder
